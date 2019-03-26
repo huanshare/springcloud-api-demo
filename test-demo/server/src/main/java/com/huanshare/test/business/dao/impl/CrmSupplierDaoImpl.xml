@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huanshare.tesst.business.dao.CrmSupplierDao">
+
+    <sql id="insert_customer_field">
+        user_name,
+        user_id,
+        code,
+        name,
+        parent_code,
+        org_type,
+        suborg_type,
+        status,
+        create_time,
+        update_time,
+        blog,
+        website,
+        phone,
+        address,
+        zipcode,
+        fax,
+        remarks,
+        total_person,
+        county,
+        city,
+        province,
+        create_user_id,
+        update_user_id
+    </sql>
+
+    <sql id="insert_customer_properties">
+        #{userName,jdbcType=VARCHAR},
+        #{userId,jdbcType=NUMERIC},
+        #{code,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR},
+        #{parentCode,jdbcType=VARCHAR},
+        #{orgType,jdbcType=VARCHAR},
+        #{subOrgType,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{blog,jdbcType=VARCHAR},
+        #{website,jdbcType=VARCHAR},
+        #{phone,jdbcType=VARCHAR},
+        #{address,jdbcType=VARCHAR},
+        #{zipCode,jdbcType=VARCHAR},
+        #{fax,jdbcType=VARCHAR},
+        #{remarks,jdbcType=VARCHAR},
+        #{totalPerson,jdbcType=NUMERIC},
+        #{county,jdbcType=VARCHAR},
+        #{city,jdbcType=VARCHAR},
+        #{province,jdbcType=VARCHAR},
+        #{createUserId,jdbcType=NUMERIC},
+        #{updateUserId,jdbcType=NUMERIC}
+    </sql>
+
+    <sql id="select_all_field">
+        supplier.id,
+        supplier.user_name,
+        supplier.user_id,
+        supplier.code,
+        supplier.name,
+        supplier.parent_code,
+        supplier.org_type,
+        supplier.suborg_type,
+        supplier.status,
+        supplier.create_time,
+        supplier.update_time,
+        supplier.blog,
+        supplier.website,
+        supplier.phone,
+        supplier.address,
+        supplier.zipcode,
+        supplier.fax,
+        supplier.remarks,
+        supplier.total_person,
+        supplier.county,
+        supplier.city,
+        supplier.province,
+        supplier.create_user_id,
+        supplier.update_user_id
+    </sql>
+
+    <!--开始添加客户-->
+    <insert id="insert" parameterType="com.huanshare.tesst.business.entity.CrmSupplier" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        CRM_SUPPLIER
+        (
+        <include refid="insert_customer_field"/>
+        )
+        VALUES
+        (
+        <include refid="insert_customer_properties"/>
+        )
+    </insert>
+    <!--结束添加客户-->
+
+    <!--<select id="selectByName" parameterType="java.lang.String" resultType="com.huanshare.tesst.business.entity.CrmSupplier">-->
+    <!--SELECT-->
+    <!--<include refid="select_all_field"/>-->
+    <!--FROM-->
+    <!--CRM_SUPPLIER as supplier-->
+    <!--WHERE-->
+    <!--supplier.name = #{name}-->
+    <!--</select>-->
+
+    <!--<select id="selectByNameAndId" resultType="com.huanshare.tesst.business.entity.CrmSupplier">-->
+    <!--SELECT-->
+    <!--<include refid="select_all_field"/>-->
+    <!--FROM-->
+    <!--CRM_SUPPLIER as supplier-->
+    <!--WHERE-->
+    <!--supplier.name = #{name}-->
+    <!--AND-->
+    <!--supplier.id &lt;&gt; #{id}-->
+    <!--</select>-->
+
+    <update id="update" parameterType="com.huanshare.tesst.business.entity.CrmSupplier">
+        UPDATE
+        CRM_SUPPLIER
+        SET
+        user_name = #{userName,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=NUMERIC},
+        code =#{code,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+        org_type = #{orgType,jdbcType=VARCHAR},
+        suborg_type = #{subOrgType,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_user_id = #{userId,jdbcType=NUMERIC},
+        blog = #{blog,jdbcType=VARCHAR},
+        website = #{website,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        address = #{address,jdbcType=VARCHAR},
+        zipcode = #{zipCode,jdbcType=VARCHAR},
+        fax = #{fax,jdbcType=VARCHAR},
+        remarks = #{remarks,jdbcType=VARCHAR},
+        total_person = #{totalPerson,jdbcType=NUMERIC},
+        county = #{county,jdbcType=VARCHAR},
+        city = #{city,jdbcType=VARCHAR},
+        province = #{province,jdbcType=VARCHAR}
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="selectByCode" parameterType="java.lang.String" resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        SELECT
+        <include refid="select_all_field"/>
+        FROM
+        CRM_SUPPLIER as supplier
+        WHERE
+        supplier.code = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <sql id="table_name_team">
+        CRM_COMMON_TEAM AS team
+    </sql>
+    <sql id="table_name_supplier">
+        CRM_SUPPLIER AS supplier
+    </sql>
+    <sql id="table_name_supplier_parent">
+        CRM_SUPPLIER AS parent
+    </sql>
+    <sql id="table_name_follow">
+        CRM_CUSTOMER_FOLLOW AS follow
+    </sql>
+    <sql id="table_name_leader">
+        CRM_COMMON_TEAM AS leader
+    </sql>
+
+    <sql id="table_full_fields">
+        DISTINCT(supplier.id),
+        <include refid="table_fields"/>,
+        parent.name AS parentName,
+        follow.status AS follow,
+        supplier.create_time,
+        supplier.update_time,
+        supplier.status
+    </sql>
+
+    <sql id="table_fields">
+        supplier.user_name,
+        supplier.user_id,
+        supplier.code,
+        supplier.name,
+        supplier.parent_code,
+        supplier.org_type,
+        supplier.suborg_type,
+        supplier.blog,
+        supplier.website,
+        supplier.phone,
+        supplier.address,
+        supplier.zipcode,
+        supplier.fax,
+        supplier.remarks,
+        supplier.total_person,
+        supplier.county,
+        supplier.city,
+        supplier.province
+    </sql>
+
+    <select id="selectByParam" parameterType="com.huanshare.tesst.business.entity.CrmSupplier"
+            resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        SELECT
+        <include refid="table_full_fields"/>,leader.user_id AS userLeaderId,leader.user_name AS userLeaderName
+        FROM
+        <include refid="table_name_supplier"/>
+        LEFT JOIN
+        <include refid="table_name_supplier_parent"/>
+        ON supplier.parent_code = parent.code
+        LEFT JOIN
+        <include refid="table_name_leader"/>
+        ON supplier.id = leader.business_id and leader.status = 'NOR' AND leader.type = 'SUPPLIER' AND leader.leader =
+        'Y'
+        LEFT JOIN
+        <include refid="table_name_team"/>
+        ON supplier.id = team.business_id and team.status = 'NOR' AND team.type = 'SUPPLIER'
+        LEFT JOIN
+        <include refid="table_name_follow"/>
+        ON supplier.id = follow.bussiness_id and follow.status = 'FOLLOW' AND follow.type = 'SUPPLIER' AND
+        follow.user_id = #{param.loginUserId}
+        <include refid="table_where_param"/>
+        <if test="param.order != null">
+            ORDER BY ${param.order}
+        </if>
+        <if test="param.order == null">
+            ORDER BY supplier.create_time DESC
+        </if>
+    </select>
+
+    <!--<select id="selectByPage" resultType="com.huanshare.tesst.business.entity.CrmSupplier">-->
+    <!--SELECT-->
+    <!--<include refid="table_full_fields"/>,leader.user_id AS userLeaderId,leader.user_name AS userLeaderName-->
+    <!--FROM-->
+    <!--<include refid="table_name_supplier"/>-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_supplier_parent"/>-->
+    <!--ON  supplier.parent_code = parent.code-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_leader"/>-->
+    <!--ON supplier.id = leader.business_id and leader.status = 'NOR' AND leader.type = 'SUPPLIER' AND leader.leader = 'Y'-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_team"/>-->
+    <!--ON supplier.id = team.business_id and team.status = 'NOR' AND team.type = 'SUPPLIER'-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_follow"/>-->
+    <!--ON supplier.id = follow.bussiness_id and follow.status = 'FOLLOW' AND follow.type = 'SUPPLIER' AND follow.user_id = #{param.loginUserId}-->
+    <!--<include refid="table_where_param"/>-->
+    <!--<if test="param.order != null">-->
+    <!--ORDER BY ${param.order}-->
+    <!--</if>-->
+    <!--<if test="param.order == null">-->
+    <!--ORDER BY supplier.create_time DESC-->
+    <!--</if>-->
+    <!--LIMIT #{page.start},#{page.limit}-->
+    <!--</select>-->
+
+    <!--<select id="countByParam" parameterType="com.huanshare.tesst.server.entity.CrmSupplier" resultType="int">-->
+    <!--SELECT count(DISTINCT(supplier.id))-->
+    <!--FROM-->
+    <!--<include refid="table_name_supplier"/>-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_supplier_parent"/>-->
+    <!--ON  supplier.parent_code = parent.code-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_leader"/>-->
+    <!--ON supplier.id = leader.business_id and leader.status = 'NOR' AND leader.type = 'SUPPLIER' AND leader.leader = 'Y'-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_team"/>-->
+    <!--ON supplier.id = team.business_id and team.status = 'NOR' AND team.type = 'SUPPLIER'-->
+    <!--LEFT JOIN-->
+    <!--<include refid="table_name_follow"/>-->
+    <!--ON supplier.id = follow.bussiness_id and follow.status = 'FOLLOW' AND follow.type = 'SUPPLIER' AND follow.user_id = #{param.loginUserId}-->
+    <!--<include refid="table_where_param"/>-->
+    <!--</select>-->
+
+    <sql id="table_where_param">
+        <if test="param != null">
+            <where>
+                <if test="param.code != null and '' != param.code">
+                    AND supplier.code = #{param.code}
+                </if>
+                <if test="param.userId != null">
+                    AND supplier.user_id = #{param.userId}
+                </if>
+                <if test="param.status != null">
+                    AND supplier.status = #{param.status}
+                </if>
+                <if test="param.status == null">
+                    AND supplier.status = 'NOR'
+                </if>
+                <if test="param.name != null">
+                    AND supplier.name LIKE CONCAT('%',#{param.name},'%')
+                </if>
+                <if test="param.createTimeStart != null">
+                    <![CDATA[  AND supplier.create_time > #{param.createTimeStart} ]]>
+                </if>
+                <if test="param.createTimeEnd != null">
+                    <![CDATA[  AND supplier.create_time <= #{param.createTimeEnd} ]]>
+                </if>
+                <if test="param.updateTimeStart != null">
+                    <![CDATA[  AND supplier.update_time > #{param.updateTimeStart} ]]>
+                </if>
+                <if test="param.updateTimeEnd != null">
+                    <![CDATA[  AND supplier.update_time <= #{param.updateTimeEnd} ]]>
+                </if>
+                <if test="param.followUserId != null">
+                    AND follow.user_id = #{param.followUserId}
+                </if>
+                <if test="param.keywords != null and '' != param.keywords">
+                    AND (supplier.code LIKE CONCAT('%',#{param.keywords},'%') OR supplier.name LIKE
+                    CONCAT('%',#{param.keywords},'%') )
+                </if>
+                <if test="param.partakeId != null and param.userLeaderId == null">
+                    AND team.user_id = #{param.partakeId} AND team.leader = 'N'
+                </if>
+                <if test="param.partakeId != null and param.userLeaderId != null">
+                    AND team.user_id = #{param.userLeaderId}
+                </if>
+                <if test="param.userLeaderId != null and param.partakeId == null">
+                    AND team.user_id = #{param.userLeaderId} AND team.leader = 'Y'
+                </if>
+                <if test="param.userIds != null">
+                    AND team.user_id IN
+                    <foreach collection="param.userIds" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="param.customQuery != null and param.customQuery != ''">
+                    ${param.customQuery}
+                </if>
+            </where>
+        </if>
+    </sql>
+
+    <!--start 根据id查询记录-->
+    <select id="selectById" resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        SELECT
+        <include refid="select_all_field"/>
+        FROM
+        CRM_SUPPLIER as supplier
+        WHERE id = #{id}
+    </select>
+    <!--end 根据id查询记录-->
+
+    <!--<select id="getSupplierByCode" parameterType="string" resultType="com.huanshare.tesst.business.entity.CrmSupplier">-->
+    <!--SELECT-->
+    <!--<include refid="select_all_field"/>-->
+    <!--FROM-->
+    <!--CRM_SUPPLIER as supplier-->
+    <!--WHERE code = #{code}-->
+    <!--</select>-->
+
+    <!--进行重名校验-->
+    <select id="isExitsName" parameterType="java.lang.String" resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        SELECT
+        <include refid="select_all_field"/>
+        FROM
+        CRM_SUPPLIER as supplier
+        WHERE
+        name = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <select id="isExitsByNameAndId" resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        SELECT
+        <include refid="select_all_field"/>
+        FROM
+        CRM_SUPPLIER as supplier
+        WHERE
+        name = #{name,jdbcType=VARCHAR}
+        AND
+        id &lt;&gt; #{id,jdbcType=NUMERIC}
+    </select>
+
+    <select id="selectByParentCode" resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        select * from CRM_SUPPLIER where parent_code = #{parentCode} AND status = 'NOR'
+    </select>
+
+    <sql id="selectAsEdit">
+        <where>
+            1 = 1
+            <if test="param.id != null">
+                AND id &lt;&gt; #{param.id}
+            </if>
+            <if test="param.parentCode != null">
+                AND parent_code &lt;&gt; #{param.parentCode}
+            </if>
+            <if test="param.name != null">
+                AND name LIKE CONCAT('%',#{param.name},'%')
+            </if>
+            AND status = 'NOR'
+        </where>
+    </sql>
+
+    <!--<select id="selectByParamAsEdit"  parameterType="com.huanshare.tesst.business.entity.CrmSupplier" resultMap="resutlMap">-->
+    <!--select * from CRM_SUPPLIER  <include refid="selectAsEdit" />-->
+    <!--LIMIT #{page.start},#{page.limit}-->
+    <!--</select>-->
+
+    <select id="countByParamAsEdit" parameterType="com.huanshare.tesst.business.entity.CrmSupplier" resultType="int">
+        SELECT count(*)
+        FROM
+        CRM_SUPPLIER
+        <include refid="selectAsEdit"/>
+    </select>
+
+    <select id="selectContactsSupplier" resultType="com.huanshare.tesst.business.entity.CrmSupplier">
+        SELECT
+        *
+        FROM
+        CRM_SUPPLIER
+        WHERE
+        status = 'NOR'
+        <if test="param != null and param.keywords != null and param.keywords != ''">
+            AND name LIKE CONCAT('%',#{param.keywords},'%')
+        </if>
+    </select>
+
+</mapper>
